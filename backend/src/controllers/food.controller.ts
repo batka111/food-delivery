@@ -42,6 +42,20 @@ export const updateFood = (request: Request, response: Response) => {
   response.send("food/:foodId Patch huselt irlee");
 };
 
-export const deleteFood = (request: Request, response: Response) => {
-  response.send("food/:foodId Delete huselt irlee");
+export const deleteFood = async (request: Request, response: Response) => {
+  try {
+    const { foodId } = request.params;
+
+    const deletedFood = await Food.findByIdAndDelete(foodId);
+
+    response.json({
+      success: true,
+      data: deletedFood,
+    });
+  } catch (error) {
+    response.status(444).json({
+      success: false,
+      error: error,
+    });
+  }
 };

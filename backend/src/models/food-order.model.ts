@@ -1,15 +1,19 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { Food } from "./food.model.js";
+import { FoodOrderItem } from "./foodOrderItems.model.js";
 
 const { Schema, model } = mongoose;
 
 const foodOrder = new Schema({
-  user: String,
+  user: {
+    type: Types.ObjectId,
+    ref: "User",
+  },
   totalPrice: Number,
   foodOrderItems: [
     {
       type: Schema.ObjectId,
-      ref: Food,
+      ref: FoodOrderItem,
     },
   ],
   status: {

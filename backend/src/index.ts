@@ -3,8 +3,9 @@ import booksRouter from "./routes/book.routes.js";
 import foodsRouter from "./routes/food.routes.js";
 import mongoose from "mongoose";
 import foodsRouterCategory from "./routes/category.routes.js";
-import userRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
 import ordersRouterCategory from "./routes/food-order.routes.js";
+import foodOrderItemRouter from "./routes/foodOrderItems.routes.js";
 
 mongoose.connect(
   "mongodb+srv://batb9714:VfzylQqTaDhUziWq@cluster0.xtttvsm.mongodb.net/food-delivery"
@@ -20,6 +21,7 @@ server.use("/food", foodsRouter);
 server.use("/category", foodsRouterCategory);
 server.use("/user", userRouter);
 server.use("/order", ordersRouterCategory);
+server.use("/gci", foodOrderItemRouter);
 
 server.get("/", (_request, response) => {
   response.send("Hello Dashka");

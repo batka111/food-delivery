@@ -5,7 +5,7 @@ import {
   getAllUsers,
   getUsersByid,
   updateUser,
-} from "../controllers/auth.controller.js";
+} from "../controllers/user.controller.js";
 
 const userRouter = express.Router();
 

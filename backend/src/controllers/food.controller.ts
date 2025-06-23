@@ -3,7 +3,7 @@ import { Food } from "../models/index.js";
 
 export const getAllFoods = async (request: Request, response: Response) => {
   try {
-    const foods = await Food.find();
+    const foods = await Food.find().populate("category");
 
     response.json({
       success: true,

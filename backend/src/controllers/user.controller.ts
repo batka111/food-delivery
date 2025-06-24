@@ -1,13 +1,26 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.model.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-export const getAllUsers = async (request: Request, response: Response) => {
+export const signIn = async (request: Request, response: Response) => {
   try {
-    const users = await User.find();
+    const { name, password } = request.body;
 
-    response.json({
-      success: true,
-      data: users,
+    const user = await User.findOne({ name });
+
+    bcrypt.compare(password, user?.password, (err, result) => {
+      if (result) {
+        response.status(200).json({
+          success: true,
+          message: "Authenticated",
+        });
+      } else {
+        response.status(200).json({
+          success: false,
+          message: "not authenticated",
+        });
+      }
     });
   } catch (error) {
     response.status(444).json({
@@ -17,72 +30,28 @@ export const getAllUsers = async (request: Request, response: Response) => {
   }
 };
 
-export const getUsersByid = async (request: Request, response: Response) => {
+export const signUp = async (request: Request, response: Response) => {
+  const { name, password } = request.body;
+
   try {
-    const { userId } = request.params; // 6853b667726e33f014c6f024
-    const user = await User.findById(userId);
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
 
-    response.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    response.status(444).json({
-      success: false,
-      error: error,
-    });
-  }
-};
+    const hashedPassword = await bcrypt.hash(
+      password,
+      salt,
+      async (err, hash) => {
+        const createdUser = await User.create({
+          name: name,
+          password: hashedPassword,
+        });
 
-export const createUsers = async (request: Request, response: Response) => {
-  try {
-    const user = request.body;
-    const createdUser = await User.create(user);
-
-    response.json({
-      success: true,
-      data: createdUser,
-    });
-  } catch (error) {
-    response.status(444).json({
-      success: false,
-      error: error,
-    });
-  }
-};
-
-export const updateUser = async (request: Request, response: Response) => {
-  try {
-    const { userId } = request.params;
-    const updatedUser = request.body;
-
-    const user = await User.findByIdAndUpdate(userId, updatedUser, {
-      new: true,
-    });
-
-    response.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    response.status(444).json({
-      success: false,
-      error: error,
-    });
-  }
-};
-
-export const deleteUser = async (request: Request, response: Response) => {
-  try {
-    const { userId } = request.params;
-    console.log(userId);
-
-    const deletedUser = await User.findByIdAndDelete(userId);
-
-    response.json({
-      success: true,
-      data: deletedUser,
-    });
+        response.status(200).json({
+          success: true,
+          data: createdUser,
+        });
+      }
+    );
   } catch (error) {
     response.status(444).json({
       success: false,

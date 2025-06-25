@@ -9,18 +9,17 @@ export const signIn = async (request: Request, response: Response) => {
 
     const user = await User.findOne({ name });
 
-    bcrypt.compare(password, user?.password, (err, result) => {
-      if (result) {
-        response.status(200).json({
-          success: true,
-          message: "Authenticated",
-        });
-      } else {
-        response.status(200).json({
-          success: false,
-          message: "not authenticated",
-        });
-      }
+    const comparedPassword = bcrypt.compare(password, user?.password || "");
+    const token = jwt.sign({ userId: user?.id }, "batka");
+    if (!comparedPassword) {
+      response.status(200).json({
+        success: false,
+        message: "not Authenticated",
+      });
+    }
+    response.status(200).json({
+      success: true,
+      message: "authenticated",
     });
   } catch (error) {
     response.status(444).json({
@@ -30,31 +29,27 @@ export const signIn = async (request: Request, response: Response) => {
   }
 };
 
-export const signUp = async (request: Request, response: Response) => {
-  const { name, password } = request.body;
-
+export const signUp = async (req: Request, res: Response) => {
+  const { email, password, phoneNumber, address } = req.body;
   try {
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
+    const saltRound = 10;
+    const salt = await bcrypt.genSalt(saltRound);
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      salt,
-      async (err, hash) => {
-        const createdUser = await User.create({
-          name: name,
-          password: hashedPassword,
-        });
+    const hashedPassword = bcrypt.hash(password, salt);
 
-        response.status(200).json({
-          success: true,
-          data: createdUser,
-        });
-      }
-    );
+    const createdUser = await User.create({
+      email: email,
+      password: hashedPassword,
+      phoneNumber: phoneNumber,
+      address: address,
+    });
+    res.status(200).json({
+      success: true,
+      data: createdUser,
+    });
   } catch (error) {
-    response.status(444).json({
-      success: false,
+    res.status(404).json({
+      succes: false,
       error: error,
     });
   }

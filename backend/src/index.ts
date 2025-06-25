@@ -6,15 +6,16 @@ import foodsRouterCategory from "./routes/category.routes.js";
 import userRouter from "./routes/user.routes.js";
 import ordersRouterCategory from "./routes/food-order.routes.js";
 import foodOrderItemRouter from "./routes/foodOrderItems.routes.js";
+import dotenv from "dotenv";
 
-mongoose.connect(
-  "mongodb+srv://batb9714:VfzylQqTaDhUziWq@cluster0.xtttvsm.mongodb.net/food-delivery"
-);
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL as string);
 
 const server = express();
 server.use(express.json());
 
-const port = 3303;
+const port = process.env.PORT;
 
 server.use("/book", booksRouter);
 server.use("/food", foodsRouter);
@@ -22,6 +23,7 @@ server.use("/category", foodsRouterCategory);
 server.use("/user", userRouter);
 server.use("/order", ordersRouterCategory);
 server.use("/gci", foodOrderItemRouter);
+server.use("/", foodOrderItemRouter);
 
 server.get("/", (_request, response) => {
   response.send("Hello Dashka");

@@ -1,5 +1,4 @@
 import express from "express";
-import booksRouter from "./routes/book.routes.js";
 import foodsRouter from "./routes/food.routes.js";
 import mongoose from "mongoose";
 import foodsRouterCategory from "./routes/category.routes.js";
@@ -17,7 +16,6 @@ server.use(express.json());
 
 const port = process.env.PORT;
 
-server.use("/book", booksRouter);
 server.use("/food", foodsRouter);
 server.use("/category", foodsRouterCategory);
 server.use("/user", userRouter);

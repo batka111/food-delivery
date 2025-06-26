@@ -2,6 +2,17 @@ import { Request, Response } from "express";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { log } from "console";
+
+export const users = async (request: Request, response: Response) => {
+  const user = await User.find();
+  console.log(user);
+
+  response.json({
+    success: true,
+    data: user,
+  });
+};
 
 export const signIn = async (request: Request, response: Response) => {
   try {

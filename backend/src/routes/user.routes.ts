@@ -9,6 +9,7 @@ import {
 
 const userRouter = express.Router();
 
+userRouter.get("/users", signIn);
 userRouter.post("/sign-in", signIn);
 userRouter.post("/sign-up", signUp);
 // userRouter.patch("/:userId", updateUser);

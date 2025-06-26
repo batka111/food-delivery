@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URL as string);
 const server = express();
 server.use(express.json());
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 
 server.use("/food", foodsRouter);
 server.use("/category", foodsRouterCategory);

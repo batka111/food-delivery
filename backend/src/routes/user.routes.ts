@@ -5,11 +5,12 @@ import {
   // getUsersByid,
   // updateUser,
   signIn,
+  users,
 } from "../controllers/user.controller.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/users", signIn);
+userRouter.get("/users", users);
 userRouter.post("/sign-in", signIn);
 userRouter.post("/sign-up", signUp);
 // userRouter.patch("/:userId", updateUser);

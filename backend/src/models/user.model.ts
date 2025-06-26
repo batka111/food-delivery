@@ -2,24 +2,25 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const user = new Schema({
-  email: {
-    type: String,
-    required: true,
+const user = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: Number,
+      required: true,
+    },
+    address: String,
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    isVerified: Boolean,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  phoneNumber: {
-    type: Number,
-    required: true,
-  },
-  address: String,
-  role: { type: String, enum: ["user", "admin"], default: "user" },
-  isVerified: Boolean,
-  createdAt: Date,
-  updatedAt: Date,
-});
+  { timestamps: true }
+);
 
 export const User = model("User", user);
